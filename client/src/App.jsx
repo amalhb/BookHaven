@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import UserInterface from './assets/sidebar/userinterface'; // Make sure to import your components correctly
+import Create from './Create';
+import DisplayBooks from './DisplayBooks';
+ import axios from 'axios';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [books, setBooks] = useState([]);
+
+
+  const addBook = async (bookData) => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/books", bookData);
+  
+      if (response.status === 201) {
+        const newBook = response.data;
+        setBooks((prevBooks) => [newBook, ...prevBooks]); // Update the books state
+      } else {
+        console.error("Failed to add book:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding book:", error);
+    }
+  };
+  
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <UserInterface />
+      <Routes>
+        <Route path="/" element={<DisplayBooks books={books} />} />
+        <Route path="/add-book" element={<Create addBook={addBook} />} />
+      </Routes>
+      <UserInterface/>
+    </Router>
+  );
+};
 
-export default App
+export default App;
