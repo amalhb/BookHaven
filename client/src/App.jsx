@@ -23,14 +23,28 @@ const App = () => {
       console.error("Error adding book:", error);
     }
   };
+  //delete a book 
+  const deleteBook = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/books/${id}`); // Send DELETE request
+      
+      if (response.status === 200) {
+        setBooks((prevBooks) => prevBooks.filter(book => book._id !== id)); // Update the state to remove the deleted book
+      } else {
+        console.error("Failed to delete book:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  };
   
 
   return (
     <Router>
       <UserInterface />
       <Routes>
-        <Route path="/" element={<DisplayBooks books={books} />} />
-        <Route path="/add-book" element={<Create addBook={addBook} />} />
+      <Route path="/" element={<DisplayBooks books={books} deleteBook={deleteBook} />} /> /** pass props to the display book books to display the book and delete book  */
+      <Route path="/add-book" element={<Create addBook={addBook} />} />
       </Routes>
       <UserInterface/>
     </Router>

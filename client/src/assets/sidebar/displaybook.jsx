@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DisplayBooks = ({ books }) => {
+const DisplayBooks = ({ books,deleteBook }) => {
   return (
     <div>
       <h2>All Books</h2>
@@ -18,7 +18,7 @@ const DisplayBooks = ({ books }) => {
               {book.imageURL && <img src={book.imageURL} alt={book.title} />}
               <p>{book.description}</p>
               <div>
-                <button>Update</button>
+                <button onClick={() => deleteBook(book._id)}>Update</button>
                 <button>Delete</button>
               </div>
             </li>
