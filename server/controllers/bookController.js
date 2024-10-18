@@ -13,11 +13,15 @@ const getAllBooks = async (req, res) => {
 
 // Create a new book
 const createBook = async (req, res) => {
+  console.log('Received book data:', req.body);
+
   try {
     const book = new Book(req.body);
     await book.save();
     res.status(201).json(book);
   } catch (error) {
+    console.log(error);
+    
     res.status(400).json({ message: error.message });
   }
 };
